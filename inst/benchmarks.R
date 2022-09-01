@@ -1,16 +1,19 @@
-library(ggplot2)
 remotes::install_github("paws-r/paws/paws.common")
 
+library(ggplot2)
 # Note: I believe python's encoder will have a slight disadvantage
 # due to it needing to convert to R.
 parse <- reticulate::import("urllib.parse")
 
 ################################################################################
-# Benchmark with default settings
+# Static parameters
 ################################################################################
 string <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~`!@#$%^&*()=+[{]}\\|;:'\",<>? "
-
 iter <- 1:7
+
+################################################################################
+# Benchmark with default settings
+################################################################################
 bm <- list()
 for (i in iter) {
   url <- paste(sample(strsplit(string, "")[[1]], (10 ^ i), replace = T), collapse = "")
@@ -30,8 +33,12 @@ result$expression <- as.character(result$expression)
 res <- tidyr::unnest(result, c(time, gc))
 p <- ggplot(res, aes(time, expression)) +
   geom_violin() +
-  facet_wrap("size", scales = "free_x")
-ggsave("inst/benchmark_results_default.jpg", plot = p)
+  facet_wrap("size", scales = "free_x") +
+  theme(
+    text = element_text(size = 8),
+    axis.text.x = element_text(angle = 20, vjust = 0.5, hjust=1)
+  )
+ggsave("inst/benchmark_results_default.jpg", plot = p, scale = .5)
 
 
 result[, c("expression", "min", "median",
@@ -42,9 +49,6 @@ result[, c("expression", "min", "median",
 ################################################################################
 # Benchmark with additional ASCII characters added to "safe"
 ################################################################################
-string <- "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~`!@#$%^&*()=+[{]}\\|;:'\",<>? "
-
-iter <- 1:7
 bm <- list()
 for (i in iter) {
   url <- paste(sample(strsplit(string, "")[[1]], (10 ^ i), replace = T), collapse = "")
@@ -63,9 +67,12 @@ result$expression <- as.character(result$expression)
 res <- tidyr::unnest(result, c(time, gc))
 p <- ggplot(res, aes(time, expression)) +
   geom_violin() +
-  facet_wrap("size", scales = "free_x")
-ggsave("inst/benchmark_results_safe.jpg", plot = p)
-
+  facet_wrap("size", scales = "free_x") +
+  theme(
+    text = element_text(size = 8),
+    axis.text.x = element_text(angle = 20, vjust = 0.5, hjust=1)
+  )
+ggsave("inst/benchmark_results_safe.jpg", plot = p, scale = .5)
 
 result[, c("expression", "min", "median",
            "itr/sec", "mem_alloc", "gc/sec",
