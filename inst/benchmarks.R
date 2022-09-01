@@ -38,8 +38,13 @@ p <- ggplot(res, aes(time, expression)) +
     text = element_text(size = 8),
     axis.text.x = element_text(angle = 20, vjust = 0.5, hjust=1)
   )
-ggsave("inst/benchmark_results_default.jpg", plot = p, scale = .5)
-
+ggsave(
+  "inst/benchmark_results_default.jpg",
+  plot = p,
+  width = 10,
+  height = 8,
+  dpi = 150
+)
 
 result[, c("expression", "min", "median",
            "itr/sec", "mem_alloc", "gc/sec",
@@ -72,7 +77,13 @@ p <- ggplot(res, aes(time, expression)) +
     text = element_text(size = 8),
     axis.text.x = element_text(angle = 20, vjust = 0.5, hjust=1)
   )
-ggsave("inst/benchmark_results_safe.jpg", plot = p, scale = .5)
+ggsave(
+  "inst/benchmark_results_safe.jpg",
+  plot = p,
+  width = 10,
+  height = 8,
+  dpi = 150
+)
 
 result[, c("expression", "min", "median",
            "itr/sec", "mem_alloc", "gc/sec",
